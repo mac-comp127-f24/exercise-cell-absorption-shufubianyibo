@@ -5,6 +5,8 @@ import edu.macalester.graphics.Ellipse;
 import edu.macalester.graphics.Point;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 @SuppressWarnings("SameParameterValue")
@@ -18,7 +20,7 @@ public class CellSimulation {
     private Ellipse shape;
     private double radius;
     private double direction;
-    private Cell cell;
+    private List<Cell> cells;
 
     public static void main(String[] args) {
         new CellSimulation();
@@ -26,26 +28,30 @@ public class CellSimulation {
 
     public CellSimulation() {
         canvas = new CanvasWindow("Cell Absorption", 800, 800);
-        populateCells();
+        populateCells(200);
 
         //noinspection InfiniteLoopStatement
         while (true) {
             Point canvasCenter = new Point(canvas.getWidth() / 2.0, canvas.getHeight() / 2.0);
-            cell.moveAround(canvasCenter);
-            cell.grow(0.02);
-
+            for (Cell cell : cells) {
+                cell.moveAround(canvasCenter);
+                cell.grow(0.02);
+            }
             canvas.draw();
             canvas.pause(10);
         }
     }
 
-    private void populateCells() {
+    private void populateCells(int numCell) {
+        cells = new ArrayList<>();
         double size = rand.nextInt(5) + 2;
-        cell = new Cell(
+        for (int i = 0; i < numCell; i++){
+            Cell cell = new Cell(
             rand.nextDouble() * (canvas.getWidth() - size),
             rand.nextDouble() * (canvas.getWidth() - size),
             size,
             Color.getHSBColor(rand.nextFloat(), rand.nextFloat() * 0.5f + 0.1f, 1));
-        canvas.add(cell.getShape());
+            canvas.add(cell.getShape());
+        }
     }
 }
